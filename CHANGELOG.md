@@ -1,0 +1,20 @@
+
+# Changelog
+
+All notable changes to this project will be documented in this file.
+
+The format is based on [Keep a Changelog](https://keepachangelog.com/), and this project adheres to [Semantic Versioning](https://semver.org/).
+
+## [1.0.0] - YYYY-MM-DD
+### Added
+- Initial release of the package.
+- Implemented centralized error handling using higher-order functions.
+- Added custom error classes: `BadRequestError`, `UnauthorizedError`, `ForbiddenError`, `NotFoundError`, `InternalServerError`, and `MethodNotAllowedError`.
+- Enabled JSON serialization for frontend-compatible error responses.
+- Added support for logging services like Sentry.
+
+## [1.1.0] - YYYY-MM-DD
+### Added
+- Option to customize error responses using `formatError`.
+- Improved error handling for unsupported HTTP methods.
+- Expanded documentation in the README.

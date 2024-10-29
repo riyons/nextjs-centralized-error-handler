@@ -51,24 +51,34 @@ Additionally, many developers prefer a structured way to handle errors using cus
 
 ## Traditional Approach vs. `nextjs-centralized-error-handler`
 
-In the traditional approach, error handling often involves manually setting up status codes and error messages in each route. With `nextjs-centralized-error-handler`, you can centralize and simplify error handling, reducing redundancy and enhancing consistency.
+In traditional Node.js/Express applications, centralized error handling is often managed through middleware, which intercepts requests and errors consistently across routes. However, Next.js API routes don’t support middleware in the same way. This is where `nextjs-centralized-error-handler` fills the gap by using a higher-order function to centralize error handling for all API routes.
 
-### Traditional Approach
+### Traditional Approach in Express (Using Middleware)
 
-In a traditional setup, each route needs to manually define the error response, which can lead to repetitive code:
+In Express, centralized error handling is done by defining middleware functions that handle repetitive tasks, like error responses:
 
 ```javascript
-// Traditional approach
-const handler = async (req, res) => {
-  if (!req.body.name) {
-    res.status(400).json({ error: 'Bad Request: Name is required' });
-  }
+// Traditional Express Approach
+const express = require('express');
+const app = express();
+
+const errorHandler = (err, req, res, next) => {
+  res.status(err.status || 500).json({ message: err.message });
 };
+
+app.use('/api/example', (req, res, next) => {
+  try {
+    // Route handler logic
+  } catch (error) {
+    next(error); // Forward errors to centralized middleware
+  }
+}, errorHandler); // Centralized error handling middleware
 ```
+In this approach, errors are passed to next(`error`), allowing centralized error-handling middleware to respond consistently across routes.
 
-### Using `nextjs-centralized-error-handler`
+### Using `nextjs-centralized-error-handler` in Next.js
 
-With `nextjs-centralized-error-handler`, error handling is simplified and centralized. You can use predefined custom error classes to throw errors consistently, while the higher-order function `errorHandler` manages the response:
+In Next.js, `nextjs-centralized-error-handler` replicates middleware behavior with a higher-order function (`errorHandler`) that wraps route handlers, intercepting and managing errors:
 
 ```javascript
 // Using nextjs-centralized-error-handler
@@ -79,18 +89,14 @@ const handler = async (req, res) => {
     // Throws a custom BadRequestError with a specific error message to inform the user
     throw new BadRequestError("Name is required.");
     
-    // Alternatively, you could use the default error message, which is:
-    // throw new BadRequestError(); 
-    // Defaults to: "It seems there was an error with your request. Please check the data you entered and try again."
+    // Alternatively, using the default error message:
+    // throw new BadRequestError();
   }
 };
 
 export default errorHandler(handler);
 ```
-
-This approach not only reduces redundancy but also standardizes error responses, making it easier to maintain and extend error handling across the application.
-
----
+With `nextjs-centralized-error-handler`, you avoid repetitive error-handling code in each route. Instead, custom error classes and the `errorHandler` higher-order function provide centralized, consistent error responses, making the code easier to maintain and extend across the application.
 
 ## Features
 
@@ -288,7 +294,9 @@ This flexibility allows you to capture all API route errors within your preferre
 ### Enhanced Logging with Sentry
 If you’re using Sentry, a popular logging service, you can integrate it with this package for error tracking:
 
-> **Note**: Sentry is an external service for tracking and debugging errors in real-time. With Sentry, you can capture, monitor, and resolve errors across your application.
+> **Note on Sentry**: Sentry is a popular monitoring tool that helps developers track, debug, and resolve issues in real-time. Integrating Sentry with `nextjs-centralized-error-handler` allows you to log errors in production, providing insight into where and why failures occur.
+
+Sentry captures details such as error stack traces and environment information, enabling you to address issues proactively. The example below demonstrates how to use Sentry’s captureException function to log errors via errorHandler.
 
 ```javascript
 const Sentry = require('@sentry/node');

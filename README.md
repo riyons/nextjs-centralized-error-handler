@@ -11,6 +11,9 @@ A comprehensive error-handling package designed specifically for Next.js applica
 ## Table of Contents
 
 - [Problem Statement: Why This Package?](#problem-statement-why-this-package)
+- [Traditional Approach vs. `nextjs-centralized-error-handler`](#traditional-approach-vs-nextjs-centralized-error-handler)
+  - [Traditional Approach in Express (Using Middleware)](#traditional-approach-in-express-using-middleware)
+  - [Using `nextjs-centralized-error-handler` in Next.js](#using-nextjs-centralized-error-handler-in-nextjs)
 - [Features](#features)
 - [Background](#background)
   - [What is Error Handling?](#what-is-error-handling)
@@ -97,6 +100,8 @@ const handler = async (req, res) => {
 export default errorHandler(handler);
 ```
 With `nextjs-centralized-error-handler`, you avoid repetitive error-handling code in each route. Instead, custom error classes and the `errorHandler` higher-order function provide centralized, consistent error responses, making the code easier to maintain and extend across the application.
+
+---
 
 ## Features
 

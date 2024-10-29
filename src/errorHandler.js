@@ -2,7 +2,7 @@
 
 function errorHandler(handler, options = {}) {
   const {
-    logger = console.error,
+    logger = console.error, // Default to console.error
     defaultStatusCode = 500,
     defaultMessage = 'An internal server error occurred. Please try again later.',
     formatError = null,

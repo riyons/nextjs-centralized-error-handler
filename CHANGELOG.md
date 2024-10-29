@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/), and this project adheres to [Semantic Versioning](https://semver.org/).
 
-## [1.0.0] - YYYY-MM-DD
+## [1.0.0] - 2024-10-29
 ### Added
 - Initial release of the package.
 - Implemented centralized error handling using higher-order functions.
@@ -13,7 +13,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/), and this
 - Enabled JSON serialization for frontend-compatible error responses.
 - Added support for logging services like Sentry.
 
-## [1.1.0] - YYYY-MM-DD
+## [1.1.0] - 2024-10-29
 ### Added
 - Option to customize error responses using `formatError`.
 - Improved error handling for unsupported HTTP methods.

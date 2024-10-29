@@ -14,7 +14,8 @@
     "middleware",
     "custom-errors",
     "api",
-    "centralized"
+    "centralized",
+    "exception-handling"
   ],
   "author": "Riyon Sebastian",
   "license": "MIT",

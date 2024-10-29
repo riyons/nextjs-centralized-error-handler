@@ -12,7 +12,6 @@ A comprehensive error-handling package designed specifically for Next.js applica
 
 - [Problem Statement: Why This Package?](#problem-statement-why-this-package)
 - [Features](#features)
-- [How It Works: The Key Components](#how-it-works-the-key-components)
 - [Background](#background)
   - [What is Error Handling?](#what-is-error-handling)
   - [Challenges in Next.js API Routes](#challenges-in-nextjs-api-routes)
@@ -103,21 +102,6 @@ This approach not only reduces redundancy but also standardizes error responses,
 
 ### 3. JSON Serialization and Frontend Compatibility
 - **Error Type Metadata**: Serialized error responses include metadata like error type, enabling the frontend to handle specific errors consistently. This enhances the user experience by delivering clear, actionable feedback, while also ensuring sensitive server details are not exposed.
-
----
-
-## How It Works: The Key Components
-
-The package operates through three main components:
-
-### a) Centralized Error Handling
-By using the `errorHandler` higher-order function, this package centralizes error handling across all API routes. Wrapping route handlers with `errorHandler` eliminates the need for redundant try-catch blocks, intercepting errors and returning standardized, JSON-formatted responses to the frontend.
-
-### b) Structured Custom Error Classes
-With predefined classes like `BadRequestError`, `UnauthorizedError`, and `NotFoundError`, this package maps errors to appropriate HTTP status codes, enhancing readability and consistency. Developers can also extend the base `CustomError` class to create additional, customized error types.
-
-### c) JSON Serialization and Frontend Compatibility
-The `errorHandler` function serializes errors in JSON format with metadata like error type, making it easier for the frontend to process and display messages consistently. This allows Next.js-based frontends to provide users with clear and user-friendly feedback.
 
 ---
 

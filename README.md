@@ -19,12 +19,15 @@ A comprehensive error-handling package designed specifically for Next.js applica
 - [Installation](#installation)
 - [Usage](#usage)
   - [Basic Setup](#basic-setup)
-  - [Further Examples](#further-examples)
   - [Custom Error Classes](#custom-error-classes)
-  - [Advanced Usage: Extending Custom Errors](#advanced-usage-extending-custom-errors)
+  - [Example Usage with Default Messages](#example-usage-with-default-messages)
+  - [Creating Custom Errors](#creating-custom-errors)
+- [Customizing Error Handling Behavior](#customizing-error-handling-behavior)
   - [Error Handler Options](#error-handler-options)
-  - [Customizing Error Handling Behavior](#customizing-error-handling-behavior)
+  - [Customizing Error Responses](#customizing-error-responses)
+- [Examples](#examples)
 - [Integration with Logging Services](#integration-with-logging-services)
+  - [Enhanced Logging with Sentry](#enhanced-logging-with-sentry)
 - [Benefits at a Glance](#benefits-at-a-glance)
 - [Comparison with Other Packages](#comparison-with-other-packages)
 - [Changelog](#changelog)
@@ -32,7 +35,6 @@ A comprehensive error-handling package designed specifically for Next.js applica
 - [License](#license)
 - [Support](#support)
 - [GitHub Repository](#github-repository)
-
 ---
 
 ## Problem Statement: Why This Package?
@@ -45,6 +47,49 @@ Additionally, many developers prefer a structured way to handle errors using cus
 - **Centralized error handling** through a higher-order function.
 - **Custom error classes** to simplify and standardize error categorization.
 - **Frontend-compatible responses**, making it easier for Next.js-based frontends to parse and display error messages effectively.
+
+---
+
+## Traditional Approach vs. `nextjs-centralized-error-handler`
+
+In the traditional approach, error handling often involves manually setting up status codes and error messages in each route. With `nextjs-centralized-error-handler`, you can centralize and simplify error handling, reducing redundancy and enhancing consistency.
+
+### Traditional Approach
+
+In a traditional setup, each route needs to manually define the error response, which can lead to repetitive code:
+
+```javascript
+// Traditional approach
+const handler = async (req, res) => {
+  if (!req.body.name) {
+    res.status(400).json({ error: 'Bad Request: Name is required' });
+  }
+};
+```
+
+### Using `nextjs-centralized-error-handler`
+
+With `nextjs-centralized-error-handler`, error handling is simplified and centralized. You can use predefined custom error classes to throw errors consistently, while the higher-order function `errorHandler` manages the response:
+
+```javascript
+// Using nextjs-centralized-error-handler
+const { errorHandler, BadRequestError } = require('nextjs-centralized-error-handler');
+
+const handler = async (req, res) => {
+  if (!req.body.name) {
+    // Throws a custom BadRequestError with a specific error message to inform the user
+    throw new BadRequestError("Name is required.");
+    
+    // Alternatively, you could use the default error message, which is:
+    // throw new BadRequestError(); 
+    // Defaults to: "It seems there was an error with your request. Please check the data you entered and try again."
+  }
+};
+
+export default errorHandler(handler);
+```
+
+This approach not only reduces redundancy but also standardizes error responses, making it easier to maintain and extend error handling across the application.
 
 ---
 
@@ -134,6 +179,17 @@ The package includes several predefined error classes:
 - `NotFoundError` (404)
 - `MethodNotAllowedError` (405)
 - `InternalServerError` (500)
+- `PaymentRequiredError` (402)
+- `NotAcceptableError` (406)
+- `RequestTimeoutError` (408)
+- `PayloadTooLargeError` (413)
+- `TooManyRequestsError` (429)
+- `BadGatewayError` (502)
+- `ServiceUnavailableError` (503)
+- `GatewayTimeoutError` (504)
+- `InsufficientStorageError` (507)
+- `BandwidthLimitExceededError` (509)
+- `NetworkAuthenticationRequiredError` (511)
 
 These classes simplify error creation without hardcoding status codes in each route:
 
@@ -142,25 +198,49 @@ These classes simplify error creation without hardcoding status codes in each ro
 throw new UnauthorizedError(); // Defaults to "Unauthorized access. Please log in again."
 ```
 
+### Example Usage with Default Messages
+If you simply instantiate an error without specifying a message, it defaults to a pre-defined, user-friendly message.
+
+```javascript
+throw new ForbiddenError(); // Defaults to "Access denied."
+throw new ForbiddenError("Custom forbidden message."); // Uses custom message provided.
+```
+
 #### Creating Custom Errors
 
-Extend the base `CustomError` class to create your own error types:
+To address specific needs beyond predefined classes, the package is designed to be extensible, allowing you to create unique custom errors for advanced use cases. You can extend the base CustomError class to define your own error types, tailored to specific business logic. Here are some examples of custom errors you might create:
 
+- `HTTPVersionNotSupportedError` (505)
+- `NotImplementedError` (501)
+- `VariantAlsoNegotiatesError` (506)
+- `ConflictError` (409)
+
+##### Example
 ```javascript
 const { CustomError } = require('nextjs-centralized-error-handler');
 
+// Define a custom ConflictError (HTTP 409) for resource conflicts
 class ConflictError extends CustomError {
   constructor(message = 'Resource conflict occurred.') {
     super(message, 409, 'ConflictError');
   }
 }
 
+// Usage
 throw new ConflictError();
 ```
+This example defines a custom ConflictError (HTTP 409), which can be thrown in cases where a resource conflict occurs. Creating custom errors allows you to handle unique business logic or application-specific needs efficiently.
+
+## Customizing Error Handling Behavior
+Beyond custom errors, this package allows developers to fully control the behavior of error handling by:
+
+- **Custom Logging**: You can plug in any logging function to track errors. This includes integrating external services (e.g., Sentry, LogRocket) or custom loggers.
+- **Error Message Formatting**: Use formatError to add custom fields (e.g., requestId, timestamp).
+- **Default Status and Messages**: Control defaults for unhandled errors, ensuring user-friendly feedback without exposing server details.
 
 ### Error Handler Options
 
-Configure `errorHandler` with options for custom logging, error formatting, and default messages:
+You can configure the `errorHandler` with options for custom logging, error formatting, and default messages:
 
 ```javascript
 const handler = async (req, res) => {
@@ -180,6 +260,8 @@ const options = {
 
 export default errorHandler(handler, options);
 ```
+
+This customization allows for detailed, structured responses that can include metadata like a timestamp, providing a richer error-handling experience for users and developers alike.
 
 ### Customizing Error Responses
 Developers can pass a `formatError` function to customize how errors are returned. This function allows for adding additional metadata (e.g., timestamp) to the response.
@@ -206,12 +288,29 @@ const handler = async (req, res) => {
 export default errorHandler(handler);
 ```
 
+## Integration with Logging Services
+To enhance observability, the package supports custom logging through any service, such as Sentry, Datadog, or custom logging solutions.
+
+1. Set up your logging service (e.g., initialize Sentry or Datadog).
+2. Pass the logging function (e.g., Sentry.captureException) to errorHandler as shown:
+
+```javascript
+// Wrap handler with errorHandler, using Sentry to capture exceptions
+export default errorHandler(handler, { logger: Sentry.captureException });
+
+This flexibility allows you to capture all API route errors within your preferred monitoring system, streamlining debugging and performance tracking.
+```
+
 ### Enhanced Logging with Sentry
+If you’re using Sentry, a popular logging service, you can integrate it with this package for error tracking:
+
+> **Note**: Sentry is an external service for tracking and debugging errors in real-time. With Sentry, you can capture, monitor, and resolve errors across your application.
 
 ```javascript
 const Sentry = require('@sentry/node');
 const { errorHandler, InternalServerError } = require('nextjs-centralized-error-handler');
 
+// Initialize Sentry with your DSN
 Sentry.init({ dsn: 'your-sentry-dsn' });
 
 const handler = async (req, res) => {
@@ -219,10 +318,18 @@ const handler = async (req, res) => {
   throw new InternalServerError();
 };
 
+// Wrap handler with errorHandler, using Sentry to capture exceptions
 export default errorHandler(handler, { logger: Sentry.captureException });
 ```
-
+By passing Sentry.captureException as the logger in errorHandler, this integration captures any errors for tracking and analysis.
 ---
+
+## Benefits at a Glance
+- **Tailored for Next.js**: Handles Next.js API route limitations with centralized error handling.
+- **Custom Error Classes**: Predefined and extensible classes for structured error management.
+- **JSON-Formatted Responses**: Frontend-compatible and metadata-enriched error messages.
+- **Customizable Logging**: Integration with third-party logging services for error monitoring.
+- **Seamless Integration**: Quickly adaptable to existing Next.js applications.
 
 ## Comparison with Other Packages
 

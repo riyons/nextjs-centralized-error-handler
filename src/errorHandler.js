@@ -1,8 +1,10 @@
 // src/errorHandler.js
 
+const { CustomError } = require('./customErrors'); // Ensure you import CustomError
+
 function errorHandler(handler, options = {}) {
   const {
-    logger = console.error, // Default to console.error
+    logger = console.error,
     defaultStatusCode = 500,
     defaultMessage = 'An internal server error occurred. Please try again later.',
     formatError = null,
@@ -12,15 +14,16 @@ function errorHandler(handler, options = {}) {
     try {
       await handler(req, res);
     } catch (error) {
-      // Log the error
       logger('API Route Error:', error);
 
-      // Determine status code and message
-      const statusCode = error.statusCode || defaultStatusCode;
-      const message =
-        statusCode === 500 ? defaultMessage : error.message || defaultMessage;
+      let statusCode = defaultStatusCode;
+      let message = defaultMessage;
 
-      // Build error response
+      if (error instanceof CustomError) {
+        statusCode = error.statusCode;
+        message = error.message || defaultMessage;
+      }
+
       let errorResponse = {
         error: {
           message,
@@ -28,12 +31,10 @@ function errorHandler(handler, options = {}) {
         },
       };
 
-      // Allow custom error formatting
       if (formatError && typeof formatError === 'function') {
         errorResponse = formatError(error, req);
       }
 
-      // Send response
       res.status(statusCode).json(errorResponse);
     }
   };

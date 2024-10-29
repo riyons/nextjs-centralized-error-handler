@@ -6,7 +6,7 @@
 ![GitHub issues](https://img.shields.io/github/issues/riyons/nextjs-centralized-error-handler)
 ![GitHub license](https://img.shields.io/github/license/riyons/nextjs-centralized-error-handler)
 
-A comprehensive error-handling package designed specifically for Next.js applications. This package provides centralized error handling through custom error classes and higher-order functions, solving common limitations in Next.js API routes. By serializing error messages in a frontend-compatible format, it enhances frontend-backend integration, making it easy to handle errors across the entire stack.
+**A comprehensive, secure error-handling package designed specifically for Next.js applications.** By leveraging centralized error handling through custom error classes and a higher-order function, this package overcomes limitations in Next.js API routes, where traditional middleware isn’t supported. It catches all errors—both expected and unexpected—ensuring consistent responses, preventing information leakage, and eliminating the need for repetitive `try-catch` blocks. Errors are serialized in a frontend-compatible JSON format, enhancing frontend-backend integration and delivering user-friendly feedback. Ideal for scalable applications, `nextjs-centralized-error-handler` simplifies error management across the entire stack while maintaining robust security.
 
 ## Table of Contents
 
@@ -27,6 +27,7 @@ A comprehensive error-handling package designed specifically for Next.js applica
 - [Customizing Error Handling Behavior](#customizing-error-handling-behavior)
   - [Error Handler Options](#error-handler-options)
   - [Customizing Error Responses](#customizing-error-responses)
+- [Security Considerations](#security-considerations)
 - [Examples](#examples)
 - [Integration with Logging Services](#integration-with-logging-services)
   - [Enhanced Logging with Sentry](#enhanced-logging-with-sentry)
@@ -260,6 +261,49 @@ This customization allows for detailed, structured responses that can include me
 
 ### Customizing Error Responses
 Developers can pass a `formatError` function to customize how errors are returned. This function allows for adding additional metadata (e.g., timestamp) to the response.
+
+---
+
+## Security Considerations
+
+### Comprehensive Exception Handling
+The provided `errorHandler` higher-order function catches all exceptions in the route handler—not just those thrown using the package's custom error classes. This approach intercepts any uncaught errors, regardless of their origin, which eliminates the need for repetitive `try-catch` blocks in each route. By wrapping your route handlers with `errorHandler`, you rely on a consistent, centralized error-handling strategy across all routes, minimizing code redundancy and enhancing maintainability.
+
+### Preventing Information Leakage
+The `errorHandler` is designed to prevent sensitive information from being exposed to clients:
+
+- **Custom Errors Only**: Only errors that are instances of `CustomError` (or its subclasses) will have their `statusCode` and `message` sent to the client. This provides meaningful, user-friendly error messages for known issues.
+
+- **Generic Handling of Other Errors**: For unexpected errors (such as those thrown by third-party libraries or unanticipated issues), `errorHandler` defaults to a `statusCode` of 500 and a generic error message, ensuring internal server details are kept private.
+
+### Example: Handling Unexpected Errors Safely
+Consider an API route that relies on a third-party library, which may throw errors we can’t predict:
+
+```javascript
+const { errorHandler } = require('nextjs-centralized-error-handler');
+
+const handler = async (req, res) => {
+  // An error from a third-party library
+  await thirdPartyLibrary.doSomething(); // Throws an unexpected error
+};
+
+export default errorHandler(handler);
+```
+### What Happens Under the Hood
+If `thirdPartyLibrary.doSomething()` throws an error that isn’t a `CustomError`, `errorHandler` will:
+
+1. **Set `statusCode`** to 500 (or the configured `defaultStatusCode`).
+2. **Set `message`** to "An internal server error occurred. Please try again later." (or `defaultMessage` if configured).
+3. **Prevent Information Leakage**: Ensures no sensitive details (e.g., the original error message or stack trace) are sent to the client.
+4. **Log the Error Server-Side**: Uses the provided logger for internal monitoring to record the error.
+
+### Note on Error Handling Strategy
+The `errorHandler` function distinguishes between custom errors and unexpected errors:
+
+- **Custom Errors (`CustomError` instances)**: The specific `statusCode` and `message` you define are sent to the client, offering clear and user-friendly feedback for known issues.
+- **Other Errors**: A default `statusCode` and message are used to safeguard against information leakage from unexpected errors.
+
+By catching all errors in this way, `nextjs-centralized-error-handler` provides a robust, secure, and unified error-handling solution tailored for Next.js applications, with built-in protections to prevent unintended data exposure.
 
 ---
 

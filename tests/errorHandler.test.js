@@ -1,7 +1,7 @@
 // tests/errorHandler.test.js
 
 const errorHandler = require('../src/errorHandler');
-const { BadRequestError } = require('../src/customErrors');
+const { BadRequestError, CustomError } = require('../src/customErrors');
 
 beforeAll(() => {
   jest.spyOn(console, 'error').mockImplementation(() => {});
@@ -134,6 +134,32 @@ describe('errorHandler with custom formatError', () => {
       type: 'BadRequestError',
       path: '/api/test',
       customField: 'customValue',
+    });
+  });
+});
+
+describe('errorHandler security', () => {
+  test('should use default status code and message for non-custom errors', async () => {
+    const req = {};
+    const res = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn(),
+    };
+
+    const handler = async () => {
+      const error = new Error('Sensitive internal error message');
+      error.statusCode = 400; // Error with statusCode and message
+      throw error;
+    };
+
+    await errorHandler(handler)(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(500); // Should use defaultStatusCode
+    expect(res.json).toHaveBeenCalledWith({
+      error: {
+        message: 'An internal server error occurred. Please try again later.', // Should use defaultMessage
+        type: 'Error',
+      },
     });
   });
 });

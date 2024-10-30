@@ -25,7 +25,8 @@ function errorHandler(handler, options = {}) {
       }
     } catch (error) {
       // Log the error for monitoring and debugging
-      logger('Route Error:', error);
+      const logMessage = res && typeof res.status === 'function' ? 'API Route Error:' : 'Route Error:';
+      logger(logMessage, error);
 
       let statusCode = defaultStatusCode;
       let message = defaultMessage;

@@ -19,7 +19,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/), and this
 - Improved error handling for unsupported HTTP methods.
 - Expanded documentation in the README.
 
-## [1.1.9] - 2024-10-30
+## [1.0.9] - 2024-10-30
 ### Fixed
 - Enhanced the `errorHandler` function to support both API Routes and App Router in Next.js, allowing for flexible error handling across different route types.
 - Adjusted error response handling to ensure appropriate responses are returned based on the presence of `res` in the request.
+
+## [1.0.10] - 2024-10-30
+### Fixed
+- Corrected log message for errors in API Route handling to reflect 'API Route Error:' instead of 'Route Error:' in the logger.
+- Ensured consistent error handling for both API Routes and App Router by refining the errorHandler implementation.

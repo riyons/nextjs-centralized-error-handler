@@ -14,6 +14,7 @@
 
 - [Quick Start](#quick-start)
 - [Why Use `nextjs-centralized-error-handler` with Next.js Middleware?](#why-use-nextjs-centralized-error-handler-with-nextjs-middleware)
+- [Comparison with Next.js 13 Middleware](#comparison-with-nextjs-13-middleware)
 - [Key Advantages of `nextjs-centralized-error-handler`](#key-advantages-of-nextjs-centralized-error-handler)
 - [Traditional Approach vs. `nextjs-centralized-error-handler`](#traditional-approach-vs-nextjs-centralized-error-handler)
   - [Traditional Approach in Express (Using Middleware)](#traditional-approach-in-express-using-middleware)
@@ -112,6 +113,115 @@ Next.js 13’s middleware offers powerful global interception capabilities, idea
 5. **Customizable and Extensible Error Handling**: The `CustomError` class is fully extensible, allowing developers to define application-specific errors, creating flexible error-handling strategies as applications evolve.
 
 By combining Next.js middleware with `nextjs-centralized-error-handler`, you achieve a robust and flexible error-handling solution that supports both global and route-specific needs.
+
+---
+
+## Comparison with Next.js 13 Middleware
+
+Next.js 13 introduces global middleware, enabling request-level interception for tasks such as authentication and general validation. Below is a comparison showing how Next.js 13 middleware differs from `nextjs-centralized-error-handler` and when to use each.
+
+### Next.js 13 Middleware Example
+
+Next.js 13 middleware can be defined globally and applied across all routes that match a specified pattern. This is useful for high-level operations like logging or authorization.
+
+```javascript
+// middleware.js (placed at the root of the app)
+import { NextResponse } from 'next/server';
+
+export function middleware(req) {
+  // Example of request validation or general logging
+  if (!req.headers.get('Authorization')) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
+  return NextResponse.next(); // Continue to the route handler
+}
+
+// Optional: Configure route matching
+export const config = {
+  matcher: '/api/:path*', // Applies middleware only to /api/* routes
+};
+```
+
+### Comparison with nextjs-centralized-error-handler
+
+While Next.js middleware is useful for global, high-level tasks, nextjs-centralized-error-handler enables route-specific error handling with custom error classes for fine-grained control. Here’s how both work together:
+
+| Feature                     | Next.js 13 Middleware                           | nextjs-centralized-error-handler                         |
+|-----------------------------|------------------------------------------------|----------------------------------------------------------|
+| Scope                       | Global, based on route pattern matching        | Route-specific, applied individually to each handler     |
+| Use Case                    | Authentication, global request validation      | Detailed error handling, custom error messages           |
+| Custom Error Responses      | Limited, generalized JSON responses            | Structured, frontend-compatible JSON responses           |
+| Custom Error Classes        | ❌                                              | ✅                                                      |
+| Error Logging Integration   | ❌                                              | ✅ (supports Sentry, Datadog, etc.)                      |
+| Fine-Grained Control        | ❌                                              | ✅                                                      |
+| Preventing Information Leakage | Limited, as it handles errors globally without distinguishing between error types | Enhanced, distinguishes between custom and unexpected errors to prevent sensitive data exposure |
+| Integration with Route Handlers | Middleware runs before route handlers, cannot modify responses within handlers | Wraps individual route handlers, allowing for customized responses per route |
+| Extensibility               | Limited to what middleware can handle globally | Highly extensible through custom error classes and configurable options |
+
+### Why Use Both Approaches Together
+
+Combining both Next.js middleware and nextjs-centralized-error-handler provides a comprehensive error-handling strategy:
+
+**Global Request Validation and Authentication:**
+
+- Use Next.js middleware to handle tasks that need to be applied across multiple routes, such as authentication, authorization, and general request validation.
+
+**Route-Specific Detailed Error Handling:**
+
+- Use nextjs-centralized-error-handler to manage errors that occur within individual route handlers, allowing for customized and structured error responses tailored to each route's specific needs.
+
+### Example: Using Both Middleware and nextjs-centralized-error-handler
+
+#### Middleware (middleware.js):
+
+```javascript
+// middleware.js (Next.js Middleware for global authentication)
+import { NextResponse } from 'next/server';
+
+export function middleware(req) {
+  // Example of authentication
+  if (!req.headers.get('Authorization')) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
+  return NextResponse.next(); // Continue to the route handler
+}
+
+export const config = {
+  matcher: '/api/:path*', // Applies middleware only to /api/* routes
+};
+```
+
+#### Route Handler (pages/api/example.js):
+
+```javascript
+// pages/api/example.js (Using nextjs-centralized-error-handler for route-specific errors)
+const { errorHandler, BadRequestError } = require('nextjs-centralized-error-handler');
+
+const handler = async (req, res) => {
+  if (!req.body.name) {
+    throw new BadRequestError('Name is required.');
+  }
+
+  // POST request handling logic
+  res.status(200).json({ message: 'Success' });
+};
+
+export default errorHandler(handler);
+```
+
+### Explanation:
+
+- **Middleware (middleware.js):**
+  - Handles global tasks like authentication.
+  - Applies to all `/api/*` routes based on the matcher configuration.
+
+- **Route Handler (example.js):**
+  - Handles route-specific logic.
+  - Utilizes `nextjs-centralized-error-handler` for detailed error handling and structured responses.
+
+By using Next.js middleware for request-level checks and `nextjs-centralized-error-handler` for response-level error handling, you achieve both broad validation and fine-grained error management.
 
 ---
 

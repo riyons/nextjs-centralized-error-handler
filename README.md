@@ -28,6 +28,7 @@
   - [Custom Error Classes](#custom-error-classes)
   - [Example Usage with Default Messages](#example-usage-with-default-messages)
   - [Creating Custom Errors](#creating-custom-errors)
+  - [Using `nextjs-centralized-error-handler` with App Router](#using-nextjs-centralized-error-handler-with-app-router)
 - [Customizing Error Handling Behavior](#customizing-error-handling-behavior)
   - [Error Handler Options](#error-handler-options)
   - [Customizing Error Responses](#customizing-error-responses)
@@ -475,6 +476,50 @@ class ConflictError extends CustomError {
 throw new ConflictError();
 ```
 This example defines a custom ConflictError (HTTP 409), which can be thrown in cases where a resource conflict occurs. Creating custom errors allows you to handle unique business logic or application-specific needs efficiently.
+
+---
+
+### Using `nextjs-centralized-error-handler` with App Router
+
+In addition to supporting traditional API routes, `nextjs-centralized-error-handler` can also be utilized with the App Router introduced in Next.js 13. Here’s how to implement error handling in your App Router using the package.
+
+#### Example: Using `nextjs-centralized-error-handler` with the App Router
+
+##### Creating a Route with Error Handling
+You can create a route in your App Router and use the error handler to manage errors effectively.
+
+```javascript
+// app/api/hello/route.js
+
+import { errorHandler, BadRequestError } from 'nextjs-centralized-error-handler';
+
+const handler = async (req) => {
+  const { name } = req.body;
+
+  if (!name) {
+    throw new BadRequestError('Name is required.'); // This error will be handled by the errorHandler
+  }
+
+  return new Response(JSON.stringify({ message: `Hello, ${name}!` }), {
+    status: 200,
+    headers: { 'Content-Type': 'application/json' },
+  });
+};
+
+// Wrap the handler with errorHandler for centralized error management
+
+export const GET = errorHandler(handler);
+export const POST = errorHandler(handler); // Example for handling POST requests
+```
+
+#### Explanation
+
+- **Handler Function**: The handler function processes incoming requests. It checks for a `name` parameter and throws a `BadRequestError` if it's missing.
+- **Error Handling**: The handler is wrapped with `errorHandler`, which captures any errors thrown during execution and returns a structured error response.
+
+#### Error Handling in App Router
+
+Using the App Router allows for a clean and structured way to manage errors while leveraging the powerful capabilities of `nextjs-centralized-error-handler`. By combining both, you ensure that your application handles errors effectively, regardless of the routing method used.
 
 ---
 

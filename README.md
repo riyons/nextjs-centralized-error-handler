@@ -5,8 +5,7 @@
 ![npm downloads](https://img.shields.io/npm/dw/nextjs-centralized-error-handler)
 ![GitHub issues](https://img.shields.io/github/issues/riyons/nextjs-centralized-error-handler)
 ![GitHub license](https://img.shields.io/github/license/riyons/nextjs-centralized-error-handler)
-![Build Status](https://img.shields.io/github/workflow/status/riyons/nextjs-centralized-error-handler/Publish%20Package)
-![Test Coverage](https://img.shields.io/coveralls/github/riyons/nextjs-centralized-error-handler)
+![Build Status](https://github.com/riyons/nextjs-centralized-error-handler/actions/workflows/publish.yml/badge.svg)
 
 **A comprehensive, secure error-handling package designed specifically for Next.js applications.** While Next.js 13 provides global middleware for high-level request interception, `nextjs-centralized-error-handler` enables **fine-grained, route-level error handling** with `custom error classes`, ensuring that error responses are both consistent and structured. The package simplifies error handling by removing the need for repetitive `try-catch` blocks, enhancing security by preventing sensitive data leakage, and making error responses frontend-compatible. Fully compatible with Next.js 13 and above.
 

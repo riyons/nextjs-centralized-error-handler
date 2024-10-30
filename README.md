@@ -62,6 +62,7 @@
 
     ```javascript
     // pages/api/example.js
+
     const { errorHandler, BadRequestError } = require('nextjs-centralized-error-handler');
 
     const handler = async (req, res) => {
@@ -125,6 +126,7 @@ Next.js 13 middleware can be defined globally and applied across all routes that
 
 ```javascript
 // middleware.js (placed at the root of the app)
+
 import { NextResponse } from 'next/server';
 
 export function middleware(req) {
@@ -172,6 +174,7 @@ In Next.js, middleware can be used to validate requests globally. However, it ca
 
 ```javascript
 // middleware.js
+
 import { NextResponse } from 'next/server';
 
 export function middleware(req) {
@@ -186,6 +189,7 @@ export function middleware(req) {
 ```
 ```javascript
 // pages/api/example.js
+
 const handler = async (req, res) => {
   if (!req.body.name) {
     throw new Error('Name is required.'); // This will not be caught by middleware
@@ -203,12 +207,13 @@ export default handler;
 2. If `req.body.name` is missing, the `Error` is thrown.
 3. However, the middleware will not catch this error, resulting in a generic 500 Internal Server Error.
 
-##### Using nextjs-centralized-error-handler
+#### Using `nextjs-centralized-error-handler`
 
 In contrast, `nextjs-centralized-error-handler` provides a higher-order function that captures errors thrown in route handlers.
 
 ```javascript
 // pages/api/example.js
+
 import { errorHandler, BadRequestError } from 'nextjs-centralized-error-handler';
 
 const handler = async (req, res) => {
@@ -235,12 +240,13 @@ Combining both Next.js middleware and `nextjs-centralized-error-handler` provide
 - **Global Request Validation and Authentication:** Use Next.js middleware to handle tasks that need to be applied across multiple routes, such as authentication, authorization, and general request validation.
 - **Route-Specific Detailed Error Handling:** Use `nextjs-centralized-error-handler` to manage errors that occur within individual route handlers, allowing for customized and structured error responses tailored to each route's specific needs.
 
-##### Example: Using Both Middleware and `nextjs-centralized-error-handler`
+### Example: Using Both Middleware and `nextjs-centralized-error-handler`
 
 **Middleware (middleware.js):**
 
 ```javascript
 // middleware.js (Next.js Middleware for global authentication)
+
 import { NextResponse } from 'next/server';
 
 export function middleware(req) {
@@ -260,6 +266,7 @@ export const config = {
 
 ```javascript
 // pages/api/example.js (Using nextjs-centralized-error-handler for route-specific errors)
+
 const { errorHandler, BadRequestError } = require('nextjs-centralized-error-handler');
 
 const handler = async (req, res) => {
@@ -300,6 +307,7 @@ In Express, centralized error handling is achieved through middleware functions,
 
 ```javascript
 // Traditional Express Approach
+
 const express = require('express');
 const app = express();
 
@@ -323,6 +331,7 @@ With `nextjs-centralized-error-handler`, you get middleware-like behavior tailor
 
 ```javascript
 // Using nextjs-centralized-error-handler
+
 const { errorHandler, BadRequestError } = require('nextjs-centralized-error-handler');
 
 const handler = async (req, res) => {
@@ -389,6 +398,7 @@ Import `errorHandler` and `custom error classes` into your Next.js API route:
 
 ```javascript
 // pages/api/someEndpoint.js
+
 const { errorHandler, BadRequestError } = require('nextjs-centralized-error-handler');
 
 const handler = async (req, res) => {
@@ -429,6 +439,7 @@ These classes simplify error creation without hardcoding status codes in each ro
 
 ```javascript
 // Example: Throwing an UnauthorizedError
+
 throw new UnauthorizedError(); // Defaults to "Unauthorized access. Please log in again."
 ```
 

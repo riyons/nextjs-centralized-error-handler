@@ -4,8 +4,8 @@ on:
   push:
     branches:
       - main      # Triggers on pushes to the main branch
-    tags:
-      - 'v*.*.*'  # Triggers on tag pushes matching the pattern
+    #tags:
+    #  - 'v*.*.*'  # Triggers on tag pushes matching the pattern
 
 jobs:
   build-and-publish:

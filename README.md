@@ -163,7 +163,7 @@ While Next.js middleware is useful for global, high-level tasks, `nextjs-central
 
 ### Understanding Scope and Flexibility: Next.js Middleware vs. `nextjs-centralized-error-handler`
 
-While Next.js middleware provides a powerful mechanism for high-level request interception, `nextjs-centralized-error-handler` excels at fine-grained error handling within individual API routes. This section clarifies their distinct roles and how they can be used together effectively.
+While Next.js middleware provides a powerful mechanism for high-level request interception, it’s important to note that middleware operates **before** the execution of the route handler. This means that any exceptions thrown inside the handler will not be caught by the middleware; instead, this will lead to a generic 500 Internal Server Error being returned to the client. In contrast, `nextjs-centralized-error-handler` excels at fine-grained error handling within individual API routes. This section clarifies their distinct roles and demonstrates how they can be used together effectively.
 
 #### Scenario: User Input Validation
 

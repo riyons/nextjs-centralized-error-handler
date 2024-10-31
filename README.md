@@ -11,10 +11,6 @@
 
 Inspired by my experiences with the Yii2 framework—where built-in error classes allow developers to manage error handling efficiently without hardcoding status codes or messages—I saw a need for similar functionality in the Node.js ecosystem. This led to the development of custom error classes in this package, enhancing consistency and usability.
 
-**A comprehensive, secure error-handling package designed specifically for Next.js applications.** While Next.js 13 provides global middleware for high-level request interception, `nextjs-centralized-error-handler` enables **fine-grained, route-level error handling** with `custom error classes`, ensuring that error responses are both consistent and structured. The package simplifies error handling by removing the need for repetitive `try-catch` blocks, enhancing security by preventing sensitive data leakage, and making error responses frontend-compatible. Fully compatible with Next.js 13 and above.
-
-Inspired by my experiences with the Yii2 framework—where built-in error classes allow developers to manage error handling efficiently without hardcoding status codes or messages—I saw a need for similar functionality in the Node.js ecosystem. This led to the development of custom error classes in this package, enhancing consistency and usability.
-
 **This package is currently in beta. As this package is newly released, your feedback is crucial for identifying any potential issues and improving its stability. I encourage you to try out the `nextjs-centralized-error-handler` package and share your experiences, whether through bug reports or suggestions for improvement. Together, we can enhance this package for the Next.js community.**
 
 ## Table of Contents

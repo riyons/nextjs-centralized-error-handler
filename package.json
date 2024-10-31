@@ -17,7 +17,7 @@
   ],
   "author": "Riyon Sebastian",
   "license": "MIT",
-  "description": "A comprehensive error-handling solution for Next.js API routes, offering centralized management with custom error classes to deliver robust and user-friendly error responses. This package simplifies error handling by eliminating repetitive try-catch blocks and enhancing security through structured JSON responses.",
+  "description": "A beta comprehensive error-handling solution for Next.js API routes, offering centralized management with custom error classes to deliver robust and user-friendly error responses. This package simplifies error handling by eliminating repetitive try-catch blocks and enhancing security through structured JSON responses. Your feedback is welcome as it is actively being developed.",
   "devDependencies": {
     "globals": "^15.11.0",
     "jest": "^29.7.0",

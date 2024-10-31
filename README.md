@@ -9,6 +9,10 @@
 
 **A comprehensive, secure error-handling package designed specifically for Next.js applications.** While Next.js 13 provides global middleware for high-level request interception, `nextjs-centralized-error-handler` enables **fine-grained, route-level error handling** with `custom error classes`, ensuring that error responses are both consistent and structured. The package simplifies error handling by removing the need for repetitive `try-catch` blocks, enhancing security by preventing sensitive data leakage, and making error responses frontend-compatible. Fully compatible with Next.js 13 and above.
 
+Inspired by my experiences with the Yii2 framework—where built-in error classes allow developers to manage error handling efficiently without hardcoding status codes or messages—I saw a need for similar functionality in the Node.js ecosystem. This led to the development of custom error classes in this package, enhancing consistency and usability.
+
+**As this package is newly released, your feedback is crucial for identifying any potential issues and improving its stability. I encourage you to integrate nextjs-centralized-error-handler into your projects and share your experiences, whether through bug reports or suggestions for improvement. Together, we can enhance this package for the Next.js community.**
+
 ## Table of Contents
 
 - [Quick Start](#quick-start)
@@ -39,6 +43,7 @@
 - [Examples](#examples)
 - [Integration with Logging Services](#integration-with-logging-services)
   - [Enhanced Logging with Sentry](#enhanced-logging-with-sentry)
+- [Community Feedback and Stability](#community-feedback-and-stability)
 - [Benefits at a Glance](#benefits-at-a-glance)
 - [Changelog](#changelog)
 - [Contributing](#contributing)
@@ -795,6 +800,13 @@ export default errorHandler(handler, { logger: Sentry.captureException });
 ```
 
 This setup captures errors for monitoring, while safeguarding against exposing sensitive information to clients. By leveraging custom loggers, `nextjs-centralized-error-handler` combines robust security with effective error tracking, ensuring a secure and observable application environment.
+
+---
+
+## Community Feedback and Stability
+As this package is newly released, I am aware of the importance of stability in production environments. While I have conducted  testing, the real-world usage and feedback from the community are crucial for identifying any potential issues and improving the package further.
+
+I encourage developers to integrate `nextjs-centralized-error-handler` into their projects and share their experiences. Whether it’s bug reports, suggestions for improvement, or simply sharing how it has helped streamline error management in your applications, your feedback is invaluable. Together, we can enhance this package and make it even more effective for the Next.js community.
 
 ---
 

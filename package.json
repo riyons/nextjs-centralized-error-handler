@@ -1,6 +1,6 @@
 {
   "name": "nextjs-centralized-error-handler",
-  "version": "1.0.12",
+  "version": "1.0.13",
   "main": "src/index.js",
   "scripts": {
     "test": "jest",

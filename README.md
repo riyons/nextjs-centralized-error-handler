@@ -11,7 +11,7 @@
 
 Inspired by my experiences with the Yii2 framework—where built-in error classes allow developers to manage error handling efficiently without hardcoding status codes or messages—I saw a need for similar functionality in the Node.js ecosystem. This led to the development of custom error classes in this package, enhancing consistency and usability.
 
-**This package is currently in beta. As this package is newly released, your feedback is crucial for identifying any potential issues and improving its stability. I encourage you to try out the `nextjs-centralized-error-handler` package and share your experiences, whether through bug reports or suggestions for improvement. Together, we can enhance this package for the Next.js community.**
+**Note:** This package is currently in beta. As this package is newly released, your feedback is crucial for identifying any potential issues and improving its stability. I encourage you to try out the `nextjs-centralized-error-handler` package and share your experiences, whether through bug reports or suggestions for improvement. Together, we can enhance this package for the Next.js community.
 
 ## Table of Contents
 

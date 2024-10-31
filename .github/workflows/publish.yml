@@ -3,9 +3,9 @@ name: Publish Package
 on:
   push:
     branches:
-      - main      # Triggers on pushes to the main branch
+      - main # Triggers on pushes to the main branch
     #tags:
-    #  - 'v*.*.*'  # Triggers on tag pushes matching the pattern
+    #  - 'v*.*.*'  # Uncomment this if you want to trigger on version tags
 
 jobs:
   build-and-publish:
@@ -26,11 +26,18 @@ jobs:
       - name: Run tests
         run: npm test
 
-      # If you have a build step, include it; otherwise, you can remove this step
-      # - name: Build the package
-      #   run: npm run build
+      - name: Determine publish tag
+        id: determine_tag
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          echo "Package version is $VERSION"
+          if [[ "$VERSION" == *"-beta"* ]]; then
+            echo "publish_tag=beta" >> $GITHUB_ENV
+          else
+            echo "publish_tag=latest" >> $GITHUB_ENV
+          fi
 
       - name: Publish to npm
-        run: npm publish
+        run: npm publish --tag ${{ env.publish_tag }}
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

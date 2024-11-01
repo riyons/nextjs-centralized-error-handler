@@ -11,7 +11,7 @@
 
 Inspired by my experiences with the Yii2 framework—where built-in error classes allow developers to manage error handling efficiently without hardcoding status codes or messages—I saw a need for similar functionality in the Node.js ecosystem. This led to the development of custom error classes in this package, enhancing consistency and usability.
 
-**Note:** This package is currently in beta. As this package is newly released, your feedback is crucial for identifying any potential issues and improving its stability. I encourage you to try out the `nextjs-centralized-error-handler` package and share your experiences, whether through bug reports or suggestions for improvement. Together, we can enhance this package for the Next.js community.
+> **_Important Note:_** This package is currently in beta. As this package is newly released, your feedback is crucial for identifying any potential issues and improving its stability. I encourage you to try out the `nextjs-centralized-error-handler` package and share your experiences, whether through bug reports or suggestions for improvement. Together, we can enhance this package for the Next.js community.
 
 ## Table of Contents
 
@@ -33,6 +33,7 @@ Inspired by my experiences with the Yii2 framework—where built-in error classe
   - [Example Usage with Default Messages](#example-usage-with-default-messages)
   - [Creating Custom Errors](#creating-custom-errors)
   - [Using `nextjs-centralized-error-handler` with App Router](#using-nextjs-centralized-error-handler-with-app-router)
+- [Testing](#testing)
 - [Customizing Error Handling Behavior](#customizing-error-handling-behavior)
   - [Error Handler Options](#error-handler-options)
   - [Customizing Error Responses](#customizing-error-responses)
@@ -528,6 +529,48 @@ Using the App Router allows for a clean and structured way to manage errors whil
 
 ---
 
+## Testing
+
+Ensuring the reliability and security of the `errorHandler` is paramount. A comprehensive test suite has been implemented to cover various scenarios, guaranteeing that the error handler functions as intended across different contexts and use cases.
+
+### Testing Strategy
+
+- **Isolation**: Each test case is designed to be independent, ensuring that the outcome of one test does not affect others.
+- **Coverage**: Tests cover both **API Routes** and **App Router** contexts, handling both custom-defined errors and unexpected runtime errors.
+- **Mocking**: Utilizes Jest's mocking capabilities to simulate different environments and behaviors, such as custom loggers and formatters.
+- **Edge Cases**: Includes tests for scenarios like throwing non-error objects and invalid `formatError` functions to ensure robustness.
+- **Security Assurance**: Verifies that sensitive information is not leaked through error responses.
+
+### Test Cases
+
+| **Test Case**                                           | **Description**                                                                                                           | **Context**               |
+|---------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------|---------------------------|
+| **Handle Custom Errors Correctly (API Routes)**        | Verifies that custom errors (e.g., `BadRequestError`) are handled with the correct status code and error response structure. | API Routes                |
+| **Handle Unexpected Errors with Default Status (API Routes)** | Ensures that unexpected errors default to a `500` status code and a generic error message, preventing information leakage.    | API Routes                |
+| **Use Custom `formatError` Function (API Routes)**      | Checks that the `formatError` function customizes the error response as expected in API Routes.                           | API Routes                |
+| **Use Custom Logger Function (API Routes)**            | Confirms that a custom logger function is invoked when an error occurs in API Routes.                                    | API Routes                |
+| **Handle Custom Errors Correctly (App Router)**         | Verifies that custom errors are handled with the correct status code and error response structure in the App Router.        | App Router                |
+| **Handle Unexpected Errors with Default Status (App Router)** | Ensures that unexpected errors default to a `500` status code and a generic error message in the App Router.                 | App Router                |
+| **Use Custom `formatError` Function (App Router)**      | Checks that the `formatError` function customizes the error response as expected in the App Router.                        | App Router                |
+| **Return 204 No Content if Handler Returns Undefined (App Router)** | Ensures that if the handler does not return a response, a `204 No Content` response is sent by default in the App Router. | App Router                |
+| **Handle Different Custom Errors Correctly**           | Tests handling of various custom errors (e.g., `NotFoundError`) with their respective status codes and messages.           | API Routes                |
+| **Use Custom Logger Function (App Router)**            | Confirms that a custom logger function is invoked when an error occurs in the App Router.                                 | App Router                |
+| **Set Content-Type to application/json (App Router)**   | Verifies that the `Content-Type` header is correctly set to `application/json` for JSON responses in the App Router.       | App Router                |
+| **Handle Non-Error Objects Gracefully**                | Ensures that throwing non-Error objects does not crash the application and defaults to a `500` status with a generic message.| API Routes                |
+| **Ignore Additional Properties in Errors**             | Confirms that additional properties in error objects do not affect the error response structure.                           | API Routes                |
+| **Fallback to Default Error Response if `formatError` is Invalid** | Ensures that if `formatError` is not a function or throws an error, the handler defaults to the standard error response.    | API Routes & App Router   |
+
+### Running Tests
+
+To execute the test suite, ensure you have all dependencies installed and run the following command:
+
+```bash
+npm test
+```
+This command will run all tests using Jest, providing a summary of passed and failed test cases along with coverage information.
+
+---
+
 ## Customizing Error Handling Behavior
 Beyond custom errors, this package allows developers to fully control the behavior of error handling by:
 
@@ -804,9 +847,9 @@ This setup captures errors for monitoring, while safeguarding against exposing s
 ---
 
 ## Community Feedback and Stability
-As this package is newly released, I am aware of the importance of stability in production environments. While I have conducted  testing, the real-world usage and feedback from the community are crucial for identifying any potential issues and improving the package further.
+As this package is newly released, I recognize the importance of stability in production environments. While I have conducted testing, real-world usage and feedback from the community are crucial for identifying any potential issues and further improving the package.
 
-I encourage developers to integrate `nextjs-centralized-error-handler` into their projects and share their experiences. Whether it’s bug reports, suggestions for improvement, or simply sharing how it has helped streamline error management in your applications, your feedback is invaluable. Together, we can enhance this package and make it even more effective for the Next.js community.
+I encourage developers to try out the nextjs-centralized-error-handler package and share their experiences. Whether it’s bug reports, improvement suggestions, or simply sharing how it has helped streamline error management in your applications, your feedback is invaluable. Together, we can enhance this package and make it even more effective for the Next.js community.
 
 ---
 

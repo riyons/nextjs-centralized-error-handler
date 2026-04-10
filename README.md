@@ -16,6 +16,8 @@ It was originally created to simplify centralized error handling in Next.js API 
 For guidance on modern error handling, see:
 https://nextjs.org/docs/app/building-your-application/routing/error-handling
 
+---
+
 # Next.js Centralized Error Handler
 
 ![npm](https://img.shields.io/npm/v/nextjs-centralized-error-handler)

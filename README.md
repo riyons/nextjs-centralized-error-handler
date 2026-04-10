@@ -1,3 +1,20 @@
+# ⚠️ Deprecated
+
+This package is no longer maintained.
+
+It was originally created to simplify centralized error handling in Next.js API routes, but newer versions of Next.js provide built-in patterns that make this package unnecessary.
+
+👉 Consider using built-in Next.js error handling instead.
+
+---
+
+## ℹ️ Notes
+
+- No further updates or bug fixes will be provided
+- The package may not be compatible with future versions of Next.js
+
+For guidance on modern error handling, see:
+https://nextjs.org/docs/app/building-your-application/routing/error-handling
 
 # Next.js Centralized Error Handler
 
@@ -879,14 +896,6 @@ This project also adheres to a [Code of Conduct](CODE_OF_CONDUCT.md), so please 
 ## License
 
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
-
----
-
-## Support
-
-If you have any questions or need assistance, feel free to open an issue or contact me at [riyonsebastian@gmail.com](mailto:riyonsebastian@gmail.com).
-
-[GitHub Repository](https://github.com/riyons/nextjs-centralized-error-handler)
 
 ---
 
